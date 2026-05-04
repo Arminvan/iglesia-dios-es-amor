@@ -1,0 +1,47 @@
+.adm-tab:hover { color:#FAF3E0 !important; background:rgba(10,71,204,.08) !important; }
+.adm-tab.active { color:#7EB3E2 !important; background:rgba(10,71,204,.15) !important; border-left-color:#0A47CC !important; }
+.adm-field {
+  width:100%; padding:9px 11px; background:#0F2540;
+  border:1px solid rgba(91,155,213,.2); border-radius:2px;
+  color:#FAF3E0; font-family:'Barlow',sans-serif; font-size:.87rem;
+  outline:none; transition:border-color .2s; box-sizing:border-box;
+}
+.adm-field:focus { border-color:#0A47CC; }
+.adm-label {
+  font-family:'Barlow Condensed',sans-serif; font-size:.62rem; font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase; color:#6B8FAE; display:block; margin-bottom:.3rem;
+}
+.adm-card {
+  background:#0F2540; border:1px solid rgba(91,155,213,.15); border-radius:4px;
+  overflow:hidden;
+}
+.adm-card-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.85rem 1.2rem; background:#132C4A; border-bottom:1px solid rgba(91,155,213,.12);
+  cursor:pointer; user-select:none;
+}
+.adm-card-head:hover { background:#1A3558; }
+.adm-card-body { padding:1.2rem; display:flex; flex-direction:column; gap:.8rem; }
+.adm-row { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+.save-btn {
+  font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:.72rem;
+  letter-spacing:.18em; text-transform:uppercase;
+  background:#0A47CC; color:#FAF3E0; border:none;
+  padding:9px 18px; cursor:pointer; border-radius:2px; transition:background .2s;
+}
+.save-btn:hover { background:#2B60E0; }
+.del-btn {
+  font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:.68rem;
+  letter-spacing:.12em; text-transform:uppercase;
+  background:rgba(192,57,43,.15); color:#e57373; border:1px solid rgba(192,57,43,.3);
+  padding:7px 14px; cursor:pointer; border-radius:2px; transition:all .2s;
+}
+.del-btn:hover { background:rgba(192,57,43,.3); }
+.toast {
+  position:fixed; bottom:2rem; left:50%; transform:translateX(-50%);
+  background:#0A47CC; color:#FAF3E0; font-family:'Barlow Condensed',sans-serif;
+  font-weight:700; font-size:.8rem; letter-spacing:.15em; text-transform:uppercase;
+  padding:.7rem 1.6rem; border-radius:2px; z-index:99999;
+  box-shadow:0 4px 20px rgba(10,71,204,.4); opacity:0; transition:opacity .3s;
+  white-space:nowrap;
+}
