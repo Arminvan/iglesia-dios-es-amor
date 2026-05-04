@@ -84,7 +84,7 @@ function showTab(name, btn) {
 // ══════════════════════════════════════════════
 const DEFAULT = {
   noticias: [
-    { id:'n1', tag:'Evento Especial', fecha:'20 de mayo, 2025', titulo:'Gran Campaña Evangelística: La Gracia que Transforma', desc:'Tres noches de prédicas, alabanza y testimonios que cambiarán vidas.', emoji:'🌟', orden:1 },
+    { id:'n1', tag:'Escuelita biblica', fecha:'27 al 31 de juio, 2026', titulo:'Los discípulos de jesus', desc:'Una icreíble semana para aprender sobre los discípulos de jesus, juegos y estudio que cambiarán vidas, con un horario de 10:00 am a 1:00 pm.', emoji:'🌟', orden:1 },
     { id:'n2', tag:'Ministerio',      fecha:'12 de mayo, 2025', titulo:'Inauguración del salón infantil Pequeños Guerreros', desc:'Nuevo espacio renovado para la formación espiritual de nuestros niños.', emoji:'👶', orden:2 },
     { id:'n3', tag:'Comunidad',       fecha:'5 de mayo, 2025',  titulo:'Jornada de servicio comunitario en el barrio norte', desc:'Más de 60 voluntarios en limpieza, asistencia médica y distribución de víveres.', emoji:'🤝', orden:3 }
   ],
