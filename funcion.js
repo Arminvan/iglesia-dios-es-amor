@@ -227,9 +227,13 @@ function renderNoticias(items) {
     'linear-gradient(135deg,#0a1d40,#1a3a6a)',
     'linear-gradient(135deg,#0b1d35,#5b9bd5)'
   ];
-  g.innerHTML = items.slice(0,3).map((n,i) => `
-    <a href="#" class="nc">
-      <div class="nc-thumb" style="background:${bgs[i%3]};font-size:2.5rem;display:flex;align-items:center;justify-content:center;">${n.emoji||'📰'}</div>
+  g.innerHTML = items.slice(0,3).map((n,i) => {
+    const thumb = n.imagen
+      ? `<img src="${n.imagen}" class="nc-thumb" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;" alt="${n.titulo}" onerror="this.parentElement.innerHTML='<div class=nc-thumb style=background:${bgs[i%3]};font-size:2.5rem;display:flex;align-items:center;justify-content:center>${n.emoji||'📰'}</div>'">`
+      : `<div class="nc-thumb" style="background:${bgs[i%3]};font-size:2.5rem;display:flex;align-items:center;justify-content:center;">${n.emoji||'📰'}</div>`;
+    return `
+    <a href="#" class="nc" onclick="openNewsModal(event,'${n.id}')">
+      ${thumb}
       <div class="nc-body">
         <p class="nc-tag">${n.tag}</p>
         <p class="nc-date">${n.fecha}</p>
@@ -237,7 +241,8 @@ function renderNoticias(items) {
         <p>${n.desc}</p>
         <span class="nc-more">Leer más</span>
       </div>
-    </a>`).join('');
+    </a>`;
+  }).join('');
 }
 
 function renderMinisterios(items) {
@@ -326,21 +331,53 @@ function loadNoticias(items) {
   items.forEach(n => {
     const card = document.createElement('div');
     card.className = 'adm-card';
+    const imgVal = n.imagen || '';
     card.innerHTML = `
       <div class="adm-card-head" onclick="toggleCard(this)">
         <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;text-transform:uppercase;color:#FAF3E0;display:flex;align-items:center;gap:.6rem;">
-          <span style="font-size:1.2rem;">${n.emoji||'📰'}</span> ${n.titulo.substring(0,40)}${n.titulo.length>40?'…':''}
+          ${imgVal ? '<span style="width:32px;height:22px;border-radius:2px;background:'+imgVal.substring(0,6)+'... no-repeat center/cover;overflow:hidden;flex-shrink:0;"><img src="'+imgVal+'" style="width:100%;height:100%;object-fit:cover;"></span>' : '<span style="font-size:1.2rem;">'+(n.emoji||'📰')+'</span>'}
+          ${n.titulo.substring(0,40)}${n.titulo.length>40?'…':''}
         </span>
         <span style="color:#6B8FAE;font-size:.8rem;">▾</span>
       </div>
       <div class="adm-card-body">
         <div class="adm-row">
-          <div><label class="adm-label">Emoji</label><input class="adm-field" data-field="emoji" value="${n.emoji||''}"></div>
+          <div><label class="adm-label">Emoji (sin imagen)</label><input class="adm-field" data-field="emoji" value="${n.emoji||''}"></div>
           <div><label class="adm-label">Etiqueta</label><input class="adm-field" data-field="tag" value="${n.tag}"></div>
         </div>
         <div><label class="adm-label">Fecha</label><input class="adm-field" data-field="fecha" value="${n.fecha}"></div>
         <div><label class="adm-label">Título</label><input class="adm-field" data-field="titulo" value="${n.titulo}"></div>
-        <div><label class="adm-label">Descripción</label><textarea class="adm-field" data-field="desc" rows="2">${n.desc}</textarea></div>
+        <div><label class="adm-label">Descripción corta (tarjeta)</label><textarea class="adm-field" data-field="desc" rows="2">${n.desc}</textarea></div>
+        <div><label class="adm-label">Contenido completo (al dar clic "Leer más")</label><textarea class="adm-field" data-field="cuerpo" rows="5" placeholder="Escribe aquí el texto completo de la noticia. Puedes usar saltos de línea para separar párrafos.">${n.cuerpo||''}</textarea></div>
+
+        <!-- Imagen -->
+        <div>
+          <label class="adm-label">Imagen de la noticia</label>
+          <div style="display:flex;flex-direction:column;gap:.6rem;">
+
+            <!-- Upload desde dispositivo -->
+            <div class="img-preview-wrap" id="ipw_${n.id}" onclick="document.getElementById('ifile_${n.id}').click()">
+              <img id="ipreview_${n.id}" src="${imgVal}" alt="preview" ${imgVal?'style="display:block;"':''}
+                onerror="this.style.display='none';document.getElementById('ihint_${n.id}').style.display='flex';">
+              <div class="upload-hint" id="ihint_${n.id}" ${imgVal?'style="display:none;"':''}><span>🖼️</span>Subir imagen desde dispositivo</div>
+              <div class="img-overlay-btn">🔄 Cambiar imagen</div>
+            </div>
+            <input type="file" id="ifile_${n.id}" accept="image/*" style="display:none;" onchange="previewImg(this,'${n.id}')">
+
+            <!-- O pegar URL -->
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <div style="flex:1;height:1px;background:rgba(91,155,213,.15);"></div>
+              <span style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.15em;color:#3A5C82;text-transform:uppercase;">O pegar URL</span>
+              <div style="flex:1;height:1px;background:rgba(91,155,213,.15);"></div>
+            </div>
+            <div style="display:flex;gap:.5rem;">
+              <input class="adm-field" id="iurl_${n.id}" placeholder="https://..." value="${imgVal&&imgVal.startsWith('http')?imgVal:''}" style="flex:1;">
+              <button onclick="applyUrl('${n.id}')" style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:#0A47CC;color:#FAF3E0;border:none;padding:9px 14px;cursor:pointer;border-radius:2px;white-space:nowrap;">Aplicar</button>
+            </div>
+            <input type="hidden" id="idata_${n.id}" data-field="imagen" value="${imgVal}">
+          </div>
+        </div>
+
         <div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:.4rem;">
           <button class="del-btn" onclick="handleDelete('noticias','${n.id}')">🗑 Eliminar</button>
           <button class="save-btn" onclick="handleSave('noticias','${n.id}',this)">💾 Guardar</button>
@@ -462,13 +499,14 @@ async function handleSave(col, id, btn) {
     btn.disabled = false;
   }, 2000);
   showToast(ok ? '✅ Guardado en Firebase' : '💾 Guardado localmente');
+  if (col === 'noticias') _newsCache = []; // invalidate modal cache
 }
 
 async function handleDelete(col, id) {
   if (!confirm('¿Eliminar este elemento?')) return;
   await deleteDoc(col, id);
   const all = await getCollection(col);
-  if (col === 'noticias')    { renderNoticias(all);    loadNoticias(all); }
+  if (col === 'noticias')    { _newsCache = []; renderNoticias(all); loadNoticias(all); }
   if (col === 'ministerios') { renderMinisterios(all); loadMinisterios(all); }
   if (col === 'avisos')      { renderAvisos(all);      loadAvisos(all); }
   showToast('🗑 Elemento eliminado');
@@ -515,6 +553,77 @@ function showToast(msg) {
 // ══════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════
+// ── NEWS MODAL ──────────────────────────────────
+let _newsCache = [];
+
+async function openNewsModal(e, id) {
+  e.preventDefault();
+  if (!_newsCache.length) _newsCache = await getCollection('noticias');
+  const n = _newsCache.find(x => x.id === id);
+  if (!n) return;
+
+  // Image
+  const imgWrap = document.getElementById('nmImgWrap');
+  if (n.imagen) {
+    imgWrap.innerHTML = `<img src="${n.imagen}" class="nm-img" alt="${n.titulo}" onerror="this.outerHTML='<div class=nm-img-placeholder>${n.emoji||'📰'}</div>'">`;
+  } else {
+    imgWrap.innerHTML = `<div class="nm-img-placeholder">${n.emoji||'📰'}</div>`;
+  }
+
+  document.getElementById('nmTag').textContent   = n.tag;
+  document.getElementById('nmDate').textContent  = n.fecha;
+  document.getElementById('nmTitle').textContent = n.titulo;
+  document.getElementById('nmBody').textContent  = n.cuerpo || n.desc;
+
+  const ov = document.getElementById('nmOverlay');
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Scroll modal to top
+  document.getElementById('nmBox').scrollTop = 0;
+}
+
+function closeNewsModal(ev) {
+  if (!ev || ev.target === document.getElementById('nmOverlay') || ev.currentTarget.classList.contains('nm-close')) {
+    document.getElementById('nmOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+// ── IMAGE UPLOAD HELPERS ─────────────────────
+function previewImg(input, id) {
+  const file = input.files[0];
+  if (!file) return;
+  // Warn if too large for Firestore (1MB limit for base64)
+  if (file.size > 900000) {
+    showToast('⚠️ Imagen muy grande. Usa una URL externa para mejor rendimiento.');
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const data = e.target.result;
+    const img = document.getElementById('ipreview_' + id);
+    const hint = document.getElementById('ihint_' + id);
+    const hidden = document.getElementById('idata_' + id);
+    img.src = data;
+    img.style.display = 'block';
+    if (hint) hint.style.display = 'none';
+    hidden.value = data;
+  };
+  reader.readAsDataURL(file);
+}
+
+function applyUrl(id) {
+  const url = document.getElementById('iurl_' + id).value.trim();
+  if (!url) return;
+  const img    = document.getElementById('ipreview_' + id);
+  const hint   = document.getElementById('ihint_' + id);
+  const hidden = document.getElementById('idata_' + id);
+  img.src = url;
+  img.style.display = 'block';
+  if (hint) hint.style.display = 'none';
+  hidden.value = url;
+  showToast('✅ URL aplicada — guarda para confirmar');
+}
+
 function initAdmin() {
   initFirebase();
 

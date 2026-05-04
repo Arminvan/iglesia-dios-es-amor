@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="estilo.css">
 <link rel="stylesheet" href="estilos.css">
+
 </head>
 <body>
 
@@ -37,7 +38,7 @@
   <div class="hero-content">
     <p class="hero-eyebrow">Bienvenido a nuestra familia</p>
     <h1 class="hero-title">Dios<br><span class="ol" style="-webkit-text-stroke:2px var(--cream);">es</span><br>Amor</h1>
-    <p class="hero-sub">"El que no ama no ha conocido a Dios, porque Dios es amor." — 1 Juan 4:8</p>
+    <p class="hero-sub">"Dios mostró el gran amor que nos tiene al enviar a Cristo a morir por nosotros cuando todavía éramos pecadores." Romanos 5:8</p>
     <div class="hero-btns">
       <a href="#nosotros" class="btn-p">Conócenos</a>
       <a href="#contacto" class="btn-g">Visítanos</a>
@@ -49,16 +50,14 @@
 <!-- TICKER -->
 <div class="ticker">
   <div class="ticker-track">
-    <span class="ticker-item">Culto Dominical · 10:00 AM</span>
-    <span class="ticker-item">Estudio Bíblico · Miércoles 7 PM</span>
-    <span class="ticker-item">Jóvenes · Viernes 7 PM</span>
-    <span class="ticker-item">Oración · Sábado 6:30 PM</span>
-    <span class="ticker-item">Grupos Celulares · Jueves 7:30 PM</span>
-    <span class="ticker-item">Culto Dominical · 10:00 AM</span>
-    <span class="ticker-item">Estudio Bíblico · Miércoles 7 PM</span>
-    <span class="ticker-item">Jóvenes · Viernes 7 PM</span>
-    <span class="ticker-item">Oración · Sábado 6:30 PM</span>
-    <span class="ticker-item">Grupos Celulares · Jueves 7:30 PM</span>
+    <span class="ticker-item">Culto Dominical · 11:00 AM</span>
+    <span class="ticker-item">Femenil · Miércoles 6:45 PM</span>
+    <span class="ticker-item">Varonil · Miércoles 8:00 PM</span>
+    <span class="ticker-item">Oración · Sábado 6:00 PM</span>
+    <span class="ticker-item">Culto Dominical · 11:00 AM</span>
+    <span class="ticker-item">Femenil · Miércoles 6:45 PM</span>
+    <span class="ticker-item">Varonil · Miércoles 8:00 PM</span>
+    <span class="ticker-item">Oración · Sábado 6:00 PM</span>
   </div>
 </div>
 
@@ -99,10 +98,10 @@
       <a href="#" class="nc">
         <div class="nc-thumb" style="background:linear-gradient(135deg,#0b1d35,#0a47cc);">🌟</div>
         <div class="nc-body">
-          <p class="nc-tag">Evento Especial</p>
-          <p class="nc-date">20 de mayo, 2025</p>
-          <h3>Gran Campaña Evangelística: La Gracia que Transforma</h3>
-          <p>Tres noches de prédicas, alabanza y testimonios que cambiarán vidas.</p>
+          <p class="nc-tag">Escuelita Biblica</p>
+          <p class="nc-date">27 al 31 de julio, 2026</p>
+          <h3>Discípulos de Jesus</h3>
+          <p>Una icreible semana para aprender sobre los discípulos de jesus, juegos y estudio que cambiarán vidas, con un horario de 10:00 am a 1:00 pm</p>
           <span class="nc-more">Leer más</span>
         </div>
       </a>
@@ -374,6 +373,21 @@
 <div class="toast" id="toast">✓ Cambios guardados</div>
 
 <script src="funcion.js"></script>
+
+
+<!-- ── MODAL NOTICIA COMPLETA ── -->
+<div class="nm-overlay" id="nmOverlay" onclick="closeNewsModal(event)">
+  <div class="nm-box" id="nmBox">
+    <button class="nm-close" onclick="closeNewsModal()">✕</button>
+    <div id="nmImgWrap"></div>
+    <div class="nm-content">
+      <p class="nm-tag" id="nmTag"></p>
+      <p class="nm-date" id="nmDate"></p>
+      <h2 class="nm-title" id="nmTitle"></h2>
+      <div class="nm-body" id="nmBody"></div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
