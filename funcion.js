@@ -84,7 +84,7 @@ function showTab(name, btn) {
 // ══════════════════════════════════════════════
 const DEFAULT = {
   noticias: [
-    { id:'n1', tag:'Escuelita biblica', fecha:'27 al 31 de juio, 2026', titulo:'Los discípulos de jesus', desc:'Una icreíble semana para aprender sobre los discípulos de jesus, juegos y estudio que cambiarán vidas, con un horario de 10:00 am a 1:00 pm.', emoji:'🌟', orden:1 },
+    { id:'n1', tag:'Evento Especial', fecha:'20 de mayo, 2025', titulo:'Gran Campaña Evangelística: La Gracia que Transforma', desc:'Tres noches de prédicas, alabanza y testimonios que cambiarán vidas.', emoji:'🌟', orden:1 },
     { id:'n2', tag:'Ministerio',      fecha:'12 de mayo, 2025', titulo:'Inauguración del salón infantil Pequeños Guerreros', desc:'Nuevo espacio renovado para la formación espiritual de nuestros niños.', emoji:'👶', orden:2 },
     { id:'n3', tag:'Comunidad',       fecha:'5 de mayo, 2025',  titulo:'Jornada de servicio comunitario en el barrio norte', desc:'Más de 60 voluntarios en limpieza, asistencia médica y distribución de víveres.', emoji:'🤝', orden:3 }
   ],
@@ -228,9 +228,11 @@ function renderNoticias(items) {
     'linear-gradient(135deg,#0b1d35,#5b9bd5)'
   ];
   g.innerHTML = items.slice(0,3).map((n,i) => {
+    const fallbackBg = bgs[i%3];
+    const emo = n.emoji||'📰';
     const thumb = n.imagen
-      ? `<img src="${n.imagen}" class="nc-thumb" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;" alt="${n.titulo}" onerror="this.parentElement.innerHTML='<div class=nc-thumb style=background:${bgs[i%3]};font-size:2.5rem;display:flex;align-items:center;justify-content:center>${n.emoji||'📰'}</div>'">`
-      : `<div class="nc-thumb" style="background:${bgs[i%3]};font-size:2.5rem;display:flex;align-items:center;justify-content:center;">${n.emoji||'📰'}</div>`;
+      ? `<div class="nc-thumb" style="padding:0;"><img src="${n.imagen}" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .5s;" alt="${n.titulo}" onerror="this.parentElement.style.background='${fallbackBg}';this.parentElement.style.fontSize='2.5rem';this.parentElement.style.display='flex';this.parentElement.style.alignItems='center';this.parentElement.style.justifyContent='center';this.outerHTML='${emo}';"></div>`
+      : `<div class="nc-thumb" style="background:${fallbackBg};font-size:2.5rem;display:flex;align-items:center;justify-content:center;">${emo}</div>`;
     return `
     <a href="#" class="nc" onclick="openNewsModal(event,'${n.id}')">
       ${thumb}
@@ -469,23 +471,36 @@ async function handleSave(col, id, btn) {
   btn.textContent = '⏳';
   btn.disabled = true;
 
+  // Leer todos los campos editables
   card.querySelectorAll('[data-field]').forEach(f => {
     const field = f.dataset.field;
-    if (f.type === 'checkbox') item[field] = f.checked;
-    else if (f.type === 'number') item[field] = parseInt(f.value)||1;
-    else item[field] = f.value;
+    if (f.type === 'checkbox') {
+      item[field] = f.checked;
+    } else if (f.type === 'number') {
+      item[field] = parseInt(f.value) || 1;
+    } else if (f.type === 'hidden') {
+      // Hidden inputs (ej. imagen en base64 o URL procesada)
+      if (f.value && f.value.trim() !== '') item[field] = f.value.trim();
+    } else {
+      item[field] = f.value;
+    }
   });
+
+  // Normalizar URL de Google Drive si aplica
+  if (item.imagen) {
+    item.imagen = normalizeImageUrl(item.imagen);
+  }
 
   const ok = await saveDoc(col, id, item);
 
-  // Update card header label
+  // Actualizar encabezado de la tarjeta
   if (col === 'noticias' || col === 'ministerios') {
     const head = card.querySelector('.adm-card-head span:first-child');
     const name = col === 'noticias' ? item.titulo : item.nombre;
     head.innerHTML = `<span style="font-size:1.2rem;">${item.emoji||'📰'}</span> ${name.substring(0,40)}`;
   }
 
-  // Re-render public section
+  // Re-renderizar sección pública
   const all2 = await getCollection(col);
   if (col === 'noticias')    renderNoticias(all2);
   if (col === 'ministerios') renderMinisterios(all2);
@@ -499,7 +514,7 @@ async function handleSave(col, id, btn) {
     btn.disabled = false;
   }, 2000);
   showToast(ok ? '✅ Guardado en Firebase' : '💾 Guardado localmente');
-  if (col === 'noticias') _newsCache = []; // invalidate modal cache
+  if (col === 'noticias') _newsCache = []; // invalidar caché modal
 }
 
 async function handleDelete(col, id) {
@@ -593,35 +608,116 @@ function closeNewsModal(ev) {
 function previewImg(input, id) {
   const file = input.files[0];
   if (!file) return;
-  // Warn if too large for Firestore (1MB limit for base64)
-  if (file.size > 900000) {
-    showToast('⚠️ Imagen muy grande. Usa una URL externa para mejor rendimiento.');
-  }
+
+  // Redimensionar imagen antes de guardar para ahorrar espacio
   const reader = new FileReader();
   reader.onload = e => {
-    const data = e.target.result;
-    const img = document.getElementById('ipreview_' + id);
-    const hint = document.getElementById('ihint_' + id);
-    const hidden = document.getElementById('idata_' + id);
-    img.src = data;
-    img.style.display = 'block';
-    if (hint) hint.style.display = 'none';
-    hidden.value = data;
+    const original = new Image();
+    original.onload = () => {
+      // Máx 1200px de ancho, aspect ratio 16:9 recortado al centro
+      const MAX_W = 1200;
+      const MAX_H = 675; // 16:9
+      let w = original.width;
+      let h = original.height;
+
+      // Escalar manteniendo proporción
+      const scale = Math.min(MAX_W / w, MAX_H / h, 1);
+      w = Math.round(w * scale);
+      h = Math.round(h * scale);
+
+      const canvas = document.createElement('canvas');
+      canvas.width  = MAX_W;
+      canvas.height = MAX_H;
+      const ctx = canvas.getContext('2d');
+
+      // Centrar y recortar a 16:9
+      const srcAspect = original.width / original.height;
+      const dstAspect = MAX_W / MAX_H;
+      let sx, sy, sw, sh;
+      if (srcAspect > dstAspect) {
+        sh = original.height;
+        sw = Math.round(sh * dstAspect);
+        sx = Math.round((original.width - sw) / 2);
+        sy = 0;
+      } else {
+        sw = original.width;
+        sh = Math.round(sw / dstAspect);
+        sx = 0;
+        sy = Math.round((original.height - sh) / 2);
+      }
+      ctx.drawImage(original, sx, sy, sw, sh, 0, 0, MAX_W, MAX_H);
+
+      const data = canvas.toDataURL('image/jpeg', 0.82);
+
+      const img    = document.getElementById('ipreview_' + id);
+      const hint   = document.getElementById('ihint_' + id);
+      const hidden = document.getElementById('idata_' + id);
+      img.src = data;
+      img.style.display = 'block';
+      if (hint) hint.style.display = 'none';
+      hidden.value = data;
+
+      const kb = Math.round(data.length * 0.75 / 1024);
+      showToast(kb > 800
+        ? `⚠️ Imagen ${kb}KB — considera usar URL externa si Firebase falla`
+        : `✅ Imagen lista (${kb}KB) — presiona Guardar`);
+    };
+    original.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
 
+// ── Normalizar URLs de distintos orígenes ─────
+function normalizeImageUrl(url) {
+  if (!url) return '';
+  url = url.trim();
+
+  // Google Drive: /file/d/ID/view → direct link
+  // Formatos: drive.google.com/file/d/ID/view?usp=sharing
+  //           drive.google.com/open?id=ID
+  const gdMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (gdMatch) {
+    return `https://drive.google.com/uc?export=view&id=${gdMatch[1]}`;
+  }
+  const gdOpen = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (gdOpen) {
+    return `https://drive.google.com/uc?export=view&id=${gdOpen[1]}`;
+  }
+
+  // Dropbox: ?dl=0 → ?raw=1
+  if (url.includes('dropbox.com') && url.includes('dl=0')) {
+    return url.replace('dl=0', 'raw=1');
+  }
+
+  // OneDrive: 1drv.ms / sharepoint embed
+  // (OneDrive no soporta direct embed fácilmente; avisar)
+
+  return url; // retornar tal cual para otros casos
+}
+
 function applyUrl(id) {
-  const url = document.getElementById('iurl_' + id).value.trim();
-  if (!url) return;
+  const raw = document.getElementById('iurl_' + id).value.trim();
+  if (!raw) return;
+  const url    = normalizeImageUrl(raw);
   const img    = document.getElementById('ipreview_' + id);
   const hint   = document.getElementById('ihint_' + id);
   const hidden = document.getElementById('idata_' + id);
+
+  img.onerror = () => {
+    img.style.display = 'none';
+    if (hint) hint.style.display = 'flex';
+    hidden.value = '';
+    showToast('❌ No se pudo cargar la imagen. Verifica que sea pública.');
+  };
+  img.onload = () => {
+    img.style.display = 'block';
+    if (hint) hint.style.display = 'none';
+    hidden.value = url;
+    // Update the URL field with normalized value
+    document.getElementById('iurl_' + id).value = url;
+    showToast('✅ Imagen cargada — presiona Guardar para confirmar');
+  };
   img.src = url;
-  img.style.display = 'block';
-  if (hint) hint.style.display = 'none';
-  hidden.value = url;
-  showToast('✅ URL aplicada — guarda para confirmar');
 }
 
 function initAdmin() {
