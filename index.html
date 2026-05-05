@@ -7,6 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="estilo.css">
 <link rel="stylesheet" href="estilos.css">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+
 
 </head>
 <body>
@@ -38,7 +41,7 @@
   <div class="hero-content">
     <p class="hero-eyebrow">Bienvenido a nuestra familia</p>
     <h1 class="hero-title">Dios<br><span class="ol" style="-webkit-text-stroke:2px var(--cream);">es</span><br>Amor</h1>
-    <p class="hero-sub">"El que no ama no ha conocido a Dios, porque Dios es amor." — 1 Juan 4:8</p>
+    <p class="hero-sub">"Dios mostró el gran amor que nos tiene al enviar a Cristo a morir por nosotros cuando todavía éramos pecadores." — Romanos 5:8</p>
     <div class="hero-btns">
       <a href="#nosotros" class="btn-p">Conócenos</a>
       <a href="#contacto" class="btn-g">Visítanos</a>
@@ -50,7 +53,7 @@
 <!-- TICKER -->
 <div class="ticker">
   <div class="ticker-track">
-     <span class="ticker-item">Culto Dominical · 11:00 AM</span>
+   <span class="ticker-item">Culto Dominical · 11:00 AM</span>
     <span class="ticker-item">Femenil · Miércoles 6:45 PM</span>
     <span class="ticker-item">Varonil · Miércoles 8:00 PM</span>
     <span class="ticker-item">Oración · Sábado 6:00 PM</span>
@@ -69,7 +72,7 @@
     <div class="nos-grid">
       <div class="nos-text">
         <p>La Iglesia Dios es Amor nació del sueño de un grupo de familias que creyeron que la fe y el amor podían transformar una comunidad entera. Desde nuestros inicios hemos sido un hogar espiritual donde cada persona es bienvenida tal como es.</p>
-        <p>Somos una iglesia evangélica comprometida con la Palabra de Dios, la adoración auténtica y el servicio a nuestra comunidad. Creemos que cada vida tiene un propósito eterno y que juntos podemos crecer en fe, esperanza y amor.</p>
+        <p>Somos una iglesia cristiana comprometida con la Palabra de Dios, la adoración auténtica y el servicio a nuestra comunidad. Creemos que cada vida tiene un propósito eterno y que juntos podemos crecer en fe, esperanza y amor.</p>
         <div class="vals">
           <div class="val"><strong>Fe Bíblica</strong><span>La Biblia como guía de vida</span></div>
           <div class="val"><strong>Comunidad</strong><span>Familia en Cristo</span></div>
@@ -81,7 +84,7 @@
         <div class="nos-img">
           <img src="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=700&q=80" alt="Congregación" onerror="this.parentElement.style.background='#1a1a1a';this.style.display='none'">
         </div>
-        <div class="stat-bd"><span class="n">15+</span><span class="l">Años de fe</span></div>
+        <div class="stat-bd"><span class="n">25+</span><span class="l">Años de fe</span></div>
       </div>
     </div>
   </div>
@@ -170,13 +173,11 @@
         </div>
       </div>
       <div class="hor-panel">
-        <div class="hor-head"><h3>Horarios</h3><p>Servicios regulares · 2025</p></div>
-        <div class="hor-row"><span class="dia">Domingo · Culto Principal</span><span class="hr">10:00 AM</span></div>
-        <div class="hor-row"><span class="dia">Domingo · Culto Vespertino</span><span class="hr">6:00 PM</span></div>
-        <div class="hor-row"><span class="dia">Miércoles · Estudio Bíblico</span><span class="hr">7:00 PM</span></div>
-        <div class="hor-row"><span class="dia">Jueves · Grupos Celulares</span><span class="hr">7:30 PM</span></div>
-        <div class="hor-row"><span class="dia">Viernes · Jóvenes</span><span class="hr">7:00 PM</span></div>
-        <div class="hor-row"><span class="dia">Sábado · Oración</span><span class="hr">6:30 PM</span></div>
+      <div class="hor-head"><h3>Horarios</h3><p>Servicios regulares · 2025</p></div>
+        <div class="hor-row"><span class="dia">Domingo · Culto Principal</span><span class="hr">11:00 AM</span></div>
+        <div class="hor-row"><span class="dia">Miércoles · Estudio Femenil</span><span class="hr">6:45 PM</span></div>
+        <div class="hor-row"><span class="dia">Miércoles · Estudio Varonil</span><span class="hr">8:00 PM</span></div>
+        <div class="hor-row"><span class="dia">Sábado · Oración</span><span class="hr">6:00 PM</span></div>
       </div>
     </div>
   </div>
@@ -190,21 +191,8 @@
     <div class="gal-intro">
       <p>Cada semana vivimos momentos que nos fortalecen: cultos de adoración, enseñanza de la Palabra, grupos celulares, actividades de servicio y momentos de celebración juntos como familia.</p>
     </div>
-    <div class="photo-g">
-      <div class="p-it tall wide" onclick="openModal('🙏','Culto de adoración dominical')" style="background:linear-gradient(135deg,#0a1d35,#0a47cc33)"><div class="p-bg">🙏</div><div class="p-ov"><span>Culto dominical</span></div></div>
-      <div class="p-it" onclick="openModal('📖','Estudio bíblico semanal')" style="background:linear-gradient(135deg,#0b1d35,#132c4a)"><div class="p-bg">📖</div><div class="p-ov"><span>Estudio bíblico</span></div></div>
-      <div class="p-it" onclick="openModal('🔥','Reunión de jóvenes')" style="background:linear-gradient(135deg,#0a2040,#0a47cc55)"><div class="p-bg">🔥</div><div class="p-ov"><span>Jóvenes</span></div></div>
-      <div class="p-it" onclick="openModal('👶','Ministerio infantil Pequeños Guerreros')" style="background:linear-gradient(135deg,#0d1b35,#1a3558)"><div class="p-bg">👶</div><div class="p-ov"><span>Ministerio infantil</span></div></div>
-      <div class="p-it" onclick="openModal('🎵','Equipo de alabanza')" style="background:linear-gradient(135deg,#0b1d35,#0f2540)"><div class="p-bg">🎵</div><div class="p-ov"><span>Alabanza</span></div></div>
-      <div class="p-it wide" onclick="openModal('🤝','Jornada de servicio comunitario')" style="background:linear-gradient(135deg,#0a2540,#132c4a)"><div class="p-bg">🤝</div><div class="p-ov"><span>Servicio comunitario</span></div></div>
-      <div class="p-it" onclick="openModal('💒','Retiro de matrimonios')" style="background:linear-gradient(135deg,#0b1d35,#0a47cc44)"><div class="p-bg">💒</div><div class="p-ov"><span>Matrimonios</span></div></div>
-    </div>
-    <div class="vida-s">
-      <div class="vi"><span class="ico">👨‍👩‍👧‍👦</span><h4>Grupos Celulares</h4><p>Reuniones semanales en hogares donde oramos, estudiamos y nos apoyamos.</p></div>
-      <div class="vi"><span class="ico">🍞</span><h4>Santa Cena</h4><p>Primer domingo de cada mes recordamos el sacrificio de Cristo.</p></div>
-      <div class="vi"><span class="ico">📚</span><h4>Escuela Bíblica</h4><p>Formación continua para profundizar en el conocimiento de la Palabra.</p></div>
-      <div class="vi"><span class="ico">🎉</span><h4>Convivencias</h4><p>Días de campo y celebraciones que nos unen como familia.</p></div>
-    </div>
+    <div class="photo-g" id="photoGrid"></div>
+    <div class="vida-s" id="vidaStrip"></div>
   </div>
 </section>
 
@@ -216,26 +204,57 @@
     <div class="ct-grid">
       <div class="ct-info">
         <h3>¿Cómo llegar a nosotros?</h3>
-        <div class="ct-row"><span class="ct-ico">📍</span><div><strong>Dirección</strong><p>Calle Iglesia #45, Col. Centro<br>Orizaba, Veracruz, México</p></div></div>
-        <div class="ct-row"><span class="ct-ico">📞</span><div><strong>Teléfono</strong><a href="tel:+527220000000">+52 (722) 000-0000</a></div></div>
-        <div class="ct-row"><span class="ct-ico">📧</span><div><strong>Correo</strong><a href="mailto:info@iglesiadiosesalor.mx">info@iglesiadiosesalor.mx</a></div></div>
-        <div class="ct-row"><span class="ct-ico">📱</span><div><strong>WhatsApp</strong><a href="https://wa.me/527220000000">+52 (722) 000-0000</a></div></div>
-        <div class="ct-row"><span class="ct-ico">🌐</span><div><strong>Redes Sociales</strong><p>@IglesiaDiosEsAmor · Facebook · Instagram · YouTube</p></div></div>
+         <div class="ct-row"><span class="ct-ico">📍</span><div><strong>Dirección</strong><p 4a Cda. de San Miguel 8, Barrio del Calvario, 72700 San Juan Cuautlancingo, Pue.</p></div></div>
+        <div class="ct-row"><span class="ct-ico">📞</span><div><strong>Teléfono</strong><a href="tel:+522225839763">+52 (222) 583-9763</a></div></div>
+        <div class="ct-row"><span class="ct-ico">📧</span><div><strong>Correo</strong><a href="igldiosesamor@gmail.com">igldiosesamor@gmail.com</a></div></div>
+        <div class="ct-row"><span class="ct-ico">🌐</span><div><strong>Redes Sociales</strong><p>https://www.facebook.com/igldiosesamor · Facebook · YouTube</p></div></div>
         <div class="verse"><p>"Vengan a mí todos ustedes que están cansados y agobiados, y yo les daré descanso."</p><cite>— Mateo 11:28</cite></div>
       </div>
       <div class="ct-form">
         <h3>Envíanos un mensaje</h3>
         <div id="fw">
           <div class="fg-r">
-            <div class="fg"><label>Nombre</label><input type="text" id="cn" placeholder="Tu nombre"></div>
-            <div class="fg"><label>Teléfono</label><input type="tel" placeholder="+52 722..."></div>
+            <div class="fg">
+              <label>Nombre *</label>
+              <input type="text" id="cf-nombre" placeholder="Tu nombre" required>
+            </div>
+            <div class="fg">
+              <label>Teléfono</label>
+              <input type="tel" id="cf-tel" placeholder="+52 222...">
+            </div>
           </div>
-          <div class="fg"><label>Correo electrónico</label><input type="email" id="ce" placeholder="correo@ejemplo.com"></div>
-          <div class="fg"><label>Motivo</label><select><option value="">Selecciona un motivo</option><option>Información general</option><option>Petición de oración</option><option>Consejería pastoral</option><option>Unirme a un ministerio</option><option>Visitar la iglesia</option><option>Otro</option></select></div>
-          <div class="fg"><label>Mensaje</label><textarea placeholder="Escríbenos, estamos para ayudarte..."></textarea></div>
-          <button class="btn-p" style="width:100%;border:none;cursor:pointer;" onclick="sendForm()">Enviar Mensaje</button>
+          <div class="fg">
+            <label>Correo electrónico *</label>
+            <input type="email" id="cf-email" placeholder="correo@ejemplo.com" required>
+          </div>
+          <div class="fg">
+            <label>Motivo</label>
+            <select id="cf-motivo">
+              <option value="">Selecciona un motivo</option>
+              <option>Información general</option>
+              <option>Petición de oración</option>
+              <option>Consejería pastoral</option>
+              <option>Unirme a un ministerio</option>
+              <option>Visitar la iglesia</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Mensaje *</label>
+            <textarea id="cf-mensaje" placeholder="Escríbenos, estamos para ayudarte..." required></textarea>
+          </div>
+          <!-- Error / estado -->
+          <div id="cf-error" style="display:none;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;color:#e57373;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);padding:.7rem 1rem;border-radius:2px;margin-bottom:.8rem;"></div>
+          <button id="cf-btn" class="btn-p" style="width:100%;border:none;cursor:pointer;transition:all .2s;" onclick="sendForm()">
+            Enviar Mensaje
+          </button>
         </div>
-        <div class="fsent" id="fs"><div class="se">✉️</div><h4>¡Mensaje enviado!</h4><p>Gracias por contactarnos. Un pastor se comunicará contigo pronto. ¡Dios te bendiga!</p></div>
+        <div class="fsent" id="fs">
+          <div class="se">✉️</div>
+          <h4>¡Mensaje enviado!</h4>
+          <p>Gracias por contactarnos. Nos comunicaremos contigo pronto. ¡Dios te bendiga!</p>
+          <button onclick="resetForm()" style="margin-top:1.2rem;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:transparent;color:var(--steel-lt);border:1px solid rgba(91,155,213,.3);padding:.6rem 1.4rem;cursor:pointer;border-radius:2px;">Enviar otro mensaje</button>
+        </div>
       </div>
     </div>
   </div>
@@ -247,7 +266,7 @@
     <div class="ft-brand">
       <div style="width:22px;height:22px;position:relative;"><div style="position:absolute;width:2px;height:100%;left:50%;transform:translateX(-50%);background:rgba(250,243,224,.35);border-radius:1px;"></div><div style="position:absolute;width:60%;height:2px;top:28%;left:20%;background:rgba(250,243,224,.35);border-radius:1px;"></div></div>
       <h2>Iglesia Dios es Amor</h2>
-      <p>Un hogar espiritual donde todos son bienvenidos. Juntos crecemos en fe, esperanza y amor desde hace más de 15 años.</p>
+      <p>Un hogar espiritual donde todos son bienvenidos. Juntos crecemos en fe, esperanza y amor desde hace más de 25 años.</p>
     </div>
     <div class="ft-col"><h4>Navegación</h4><ul><li><a href="#inicio">Inicio</a></li><li><a href="#nosotros">Nosotros</a></li><li><a href="#noticias">Noticias</a></li><li><a href="#ministerios">Ministerios</a></li><li><a href="#avisos">Avisos</a></li><li><a href="#galeria">Galería</a></li><li><a href="#contacto">Contacto</a></li></ul></div>
     <div class="ft-col"><h4>Servicios</h4><ul><li><a href="#">Culto Dominical — 10 AM</a></li><li><a href="#">Estudio Bíblico — Mié 7 PM</a></li><li><a href="#">Jóvenes — Vie 7 PM</a></li><li><a href="#">Oración — Sáb 6:30 PM</a></li><li><a href="#">Grupos Celulares — Jue</a></li></ul></div>
@@ -264,21 +283,7 @@
   <div class="m-inner"><span class="m-emoji" id="me"></span><p class="m-cap" id="mc"></p></div>
 </div>
 
-<script>
-  window.addEventListener('scroll', () => {
-    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
-  });
-  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
-  document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
-  function openModal(e, c) { document.getElementById('me').textContent=e; document.getElementById('mc').textContent=c; document.getElementById('modal').classList.add('open'); }
-  function closeModal(ev) { if(!ev||ev.target===document.getElementById('modal')||ev.currentTarget.classList.contains('m-cls')) document.getElementById('modal').classList.remove('open'); }
-  function sendForm() {
-    const n=document.getElementById('cn').value.trim(), e=document.getElementById('ce').value.trim();
-    if(!n||!e){alert('Por favor ingresa tu nombre y correo.');return;}
-    document.getElementById('fw').style.display='none';
-    document.getElementById('fs').style.display='block';
-  }
-</script>
+<script src="funcion-correo.js"></script>
 
 <!-- Firebase SDKs (compat v9) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -322,6 +327,7 @@
       <button class="adm-tab active" onclick="showTab('noticias',this)" style="display:block;width:100%;text-align:left;padding:.75rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7EB3E2;background:rgba(10,71,204,.15);border:none;border-left:3px solid #0A47CC;cursor:pointer;">📰 Noticias</button>
       <button class="adm-tab" onclick="showTab('ministerios',this)" style="display:block;width:100%;text-align:left;padding:.75rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6B8FAE;background:none;border:none;border-left:3px solid transparent;cursor:pointer;transition:all .2s;">⛪ Ministerios</button>
       <button class="adm-tab" onclick="showTab('avisos',this)" style="display:block;width:100%;text-align:left;padding:.75rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6B8FAE;background:none;border:none;border-left:3px solid transparent;cursor:pointer;transition:all .2s;">📌 Avisos</button>
+      <button class="adm-tab" onclick="showTab('galeria',this)" style="display:block;width:100%;text-align:left;padding:.75rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6B8FAE;background:none;border:none;border-left:3px solid transparent;cursor:pointer;transition:all .2s;">🖼️ Galería</button>
     </nav>
     <div style="padding:1rem 1.4rem;border-top:1px solid rgba(91,155,213,.1);">
       <button onclick="closeAdmin()" style="width:100%;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6B8FAE;background:rgba(255,255,255,.04);border:1px solid rgba(91,155,213,.15);padding:.6rem;cursor:pointer;border-radius:2px;transition:all .2s;">✕ Cerrar panel</button>
@@ -364,7 +370,35 @@
         <button onclick="addAviso()" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;background:#0A47CC;color:#FAF3E0;border:none;padding:10px 20px;cursor:pointer;border-radius:2px;">+ Nuevo Aviso</button>
       </div>
       <div id="avisos-list" style="display:flex;flex-direction:column;gap:1rem;"></div>
-    </div>
+    </div><!-- end tab-avisos -->
+
+    <!-- ── TAB GALERÍA ── -->
+    <div id="tab-galeria" class="adm-content" style="padding:2rem;display:none;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.8rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;text-transform:uppercase;color:#FAF3E0;">Galería</h2>
+          <p style="font-size:.78rem;color:#6B8FAE;margin-top:.2rem;">7 celdas fijas · Edita imagen y título de cada una</p>
+        </div>
+      </div>
+      <!-- Mini preview del layout -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:70px;gap:2px;margin-bottom:1.8rem;border-radius:3px;overflow:hidden;background:rgba(91,155,213,.08);">
+        <div style="grid-column:span 2;grid-row:span 2;background:#132C4A;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6B8FAE;text-align:center;line-height:1.4;">Celda 1<br><span style="font-size:.5rem;opacity:.6;">(Grande)</span></div>
+        <div style="background:#0F2540;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-family:'Barlow Condensed',sans-serif;color:#3A5C82;letter-spacing:.08em;text-transform:uppercase;">2</div>
+        <div style="background:#0F2540;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-family:'Barlow Condensed',sans-serif;color:#3A5C82;letter-spacing:.08em;text-transform:uppercase;">3</div>
+        <div style="background:#0F2540;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-family:'Barlow Condensed',sans-serif;color:#3A5C82;letter-spacing:.08em;text-transform:uppercase;">4</div>
+        <div style="background:#0F2540;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-family:'Barlow Condensed',sans-serif;color:#3A5C82;letter-spacing:.08em;text-transform:uppercase;">5</div>
+        <div style="grid-column:span 2;background:#0F2540;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-family:'Barlow Condensed',sans-serif;color:#3A5C82;letter-spacing:.08em;text-transform:uppercase;">6 (Ancha)</div>
+        <div style="background:#0F2540;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-family:'Barlow Condensed',sans-serif;color:#3A5C82;letter-spacing:.08em;text-transform:uppercase;">7</div>
+      </div>
+      <div id="galeria-list" style="display:flex;flex-direction:column;gap:1rem;"></div>
+
+      <!-- Tarjetas de vida -->
+      <div style="margin-top:2rem;padding-top:1.8rem;border-top:1px solid rgba(91,155,213,.12);">
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:900;text-transform:uppercase;color:#FAF3E0;margin-bottom:.4rem;">Tarjetas de comunidad</h3>
+        <p style="font-size:.75rem;color:#6B8FAE;margin-bottom:1.2rem;">Las 4 tarjetas debajo de la galería de fotos</p>
+        <div id="vida-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;"></div>
+      </div>
+    </div><!-- end tab-galeria -->
 
   </div>
 </div>
@@ -373,6 +407,7 @@
 <div class="toast" id="toast">✓ Cambios guardados</div>
 
 <script src="funcion.js"></script>
+
 
 <!-- ── MODAL NOTICIA COMPLETA ── -->
 <div class="nm-overlay" id="nmOverlay" onclick="closeNewsModal(event)">

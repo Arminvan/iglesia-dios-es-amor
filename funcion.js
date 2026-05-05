@@ -101,6 +101,21 @@ const DEFAULT = {
     { id:'a2', dia:'01', mes:'Jun', titulo:'Cambio de horario en culto dominical', desc:'A partir del 1 de junio el culto dominical pasará a las 10:30 AM.', urgente:false, orden:2 },
     { id:'a3', dia:'15', mes:'Jun', titulo:'Retiro anual de mujeres "Coronadas"', desc:'Inscripciones abiertas. Lugar: Rancho El Refugio. Cupo limitado.', urgente:false, orden:3 },
     { id:'a4', dia:'22', mes:'Jun', titulo:'Bautismos en agua', desc:'Próximo servicio de bautismos el 22 de junio.', urgente:false, orden:4 }
+  ],
+  galeria: [
+    { id:'g1', titulo:'Culto dominical',            emoji:'🙏', imagen:'', size:'tall wide', orden:1 },
+    { id:'g2', titulo:'Estudio bíblico',             emoji:'📖', imagen:'', size:'',          orden:2 },
+    { id:'g3', titulo:'Jóvenes',                     emoji:'🔥', imagen:'', size:'',          orden:3 },
+    { id:'g4', titulo:'Ministerio infantil',         emoji:'👶', imagen:'', size:'',          orden:4 },
+    { id:'g5', titulo:'Alabanza',                    emoji:'🎵', imagen:'', size:'',          orden:5 },
+    { id:'g6', titulo:'Servicio comunitario',        emoji:'🤝', imagen:'', size:'wide',       orden:6 },
+    { id:'g7', titulo:'Matrimonios',                 emoji:'💒', imagen:'', size:'',          orden:7 }
+  ],
+  vida: [
+    { id:'v1', emoji:'👨‍👩‍👧‍👦', titulo:'Grupos Celulares', desc:'Reuniones semanales en hogares donde oramos, estudiamos y nos apoyamos.', orden:1 },
+    { id:'v2', emoji:'🍞',         titulo:'Santa Cena',       desc:'Primer domingo de cada mes recordamos el sacrificio de Cristo.',          orden:2 },
+    { id:'v3', emoji:'📚',         titulo:'Escuela Bíblica',  desc:'Formación continua para profundizar en el conocimiento de la Palabra.',    orden:3 },
+    { id:'v4', emoji:'🎉',         titulo:'Convivencias',     desc:'Días de campo y celebraciones que nos unen como familia.',                orden:4 }
   ]
 };
 
@@ -203,7 +218,7 @@ async function addDoc(col, data) {
 // ── Escuchar cambios en tiempo real ──────────
 function listenRealtime() {
   if (!fbReady) return;
-  ['noticias','ministerios','avisos'].forEach(col => {
+  ['noticias','ministerios','avisos','galeria','vida'].forEach(col => {
     db.collection(col).orderBy('orden').onSnapshot(snap => {
       if (snap.empty) return;
       const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -212,6 +227,8 @@ function listenRealtime() {
       if      (col === 'noticias')    renderNoticias(items);
       else if (col === 'ministerios') renderMinisterios(items);
       else if (col === 'avisos')      renderAvisos(items);
+      else if (col === 'galeria')     { _galCache = []; renderGaleria(items); }
+      else if (col === 'vida')        renderVida(items);
     }, err => console.warn('Snapshot error:', err));
   });
 }
@@ -274,15 +291,83 @@ function renderAvisos(items) {
     </div>`).join('');
 }
 
+function renderGaleria(items) {
+  const g = document.getElementById('photoGrid');
+  if (!g) return;
+  const bgs = [
+    'linear-gradient(135deg,#0a1d35,#0a47cc33)',
+    'linear-gradient(135deg,#0b1d35,#132c4a)',
+    'linear-gradient(135deg,#0a2040,#0a47cc55)',
+    'linear-gradient(135deg,#0d1b35,#1a3558)',
+    'linear-gradient(135deg,#0b1d35,#0f2540)',
+    'linear-gradient(135deg,#0a2540,#132c4a)',
+    'linear-gradient(135deg,#0b1d35,#0a47cc44)'
+  ];
+  g.innerHTML = items.map((it, i) => {
+    const cls  = ['p-it', it.size].filter(Boolean).join(' ');
+    const inner = it.imagen
+      ? `<img src="${it.imagen}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;" alt="${it.titulo}"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+         <div class="p-bg" style="display:none;">${it.emoji||'🖼️'}</div>`
+      : `<div class="p-bg">${it.emoji||'🖼️'}</div>`;
+    return `<div class="${cls}" style="background:${bgs[i%bgs.length]};"
+              onclick="openGalModal('${it.id}')">
+        ${inner}
+        <div class="p-ov"><span>${it.titulo}</span></div>
+      </div>`;
+  }).join('');
+}
+
+function renderVida(items) {
+  const s = document.getElementById('vidaStrip');
+  if (!s) return;
+  s.innerHTML = items.map(v => `
+    <div class="vi">
+      <span class="ico">${v.emoji}</span>
+      <h4>${v.titulo}</h4>
+      <p>${v.desc}</p>
+    </div>`).join('');
+}
+
+// ── Gallery lightbox modal ────────────────────
+let _galCache = [];
+async function openGalModal(id) {
+  if (!_galCache.length) _galCache = await getCollection('galeria');
+  const it = _galCache.find(x => x.id === id);
+  if (!it) return;
+  // Reuse existing emoji modal for now
+  if (it.imagen) {
+    // Show full image in a nice overlay
+    const ov = document.createElement('div');
+    ov.id = 'galLightbox';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:6000;background:rgba(7,15,30,.97);display:flex;align-items:center;justify-content:center;padding:1.5rem;cursor:zoom-out;';
+    ov.innerHTML = `<div style="position:relative;max-width:900px;width:100%;">
+      <img src="${it.imagen}" style="width:100%;border-radius:3px;max-height:85vh;object-fit:contain;" alt="${it.titulo}">
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:.8rem 1.2rem;background:linear-gradient(to top,rgba(7,15,30,.9),transparent);">
+        <p style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#FAF3E0;">${it.titulo}</p>
+      </div>
+      <button onclick="document.getElementById('galLightbox').remove()" style="position:absolute;top:.7rem;right:.7rem;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>`;
+    ov.addEventListener('click', e => { if(e.target===ov) ov.remove(); });
+    document.body.appendChild(ov);
+  } else {
+    openModal(it.emoji||'🖼️', it.titulo);
+  }
+}
+
 async function renderAll() {
-  const [n, m, a] = await Promise.all([
+  const [n, m, a, g, v] = await Promise.all([
     getCollection('noticias'),
     getCollection('ministerios'),
-    getCollection('avisos')
+    getCollection('avisos'),
+    getCollection('galeria'),
+    getCollection('vida')
   ]);
   renderNoticias(n);
   renderMinisterios(m);
   renderAvisos(a);
+  renderGaleria(g);
+  renderVida(v);
 }
 
 // ══════════════════════════════════════════════
@@ -290,14 +375,18 @@ async function renderAll() {
 // ══════════════════════════════════════════════
 async function loadAll() {
   showLoading(true);
-  const [n, m, a] = await Promise.all([
+  const [n, m, a, g, v] = await Promise.all([
     getCollection('noticias'),
     getCollection('ministerios'),
-    getCollection('avisos')
+    getCollection('avisos'),
+    getCollection('galeria'),
+    getCollection('vida')
   ]);
   loadNoticias(n);
   loadMinisterios(m);
   loadAvisos(a);
+  loadGaleria(g);
+  loadVida(v);
   showLoading(false);
 }
 
@@ -326,6 +415,146 @@ function fbStatus() {
   }
 }
 
+// ── loadGaleria admin panel ──────────────────
+function loadGaleria(items) {
+  const list = document.getElementById('galeria-list');
+  if (!list) return;
+  list.innerHTML = '';
+  const sizeLabels = { 'tall wide':'Grande (doble ancho y alto)', 'wide':'Ancha (doble ancho)', '':'Normal' };
+  items.forEach((it) => {
+    const card = document.createElement('div');
+    card.className = 'adm-card';
+    const imgVal = it.imagen || '';
+    card.innerHTML = `
+      <div class="adm-card-head" onclick="toggleCard(this)">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.92rem;text-transform:uppercase;color:#FAF3E0;display:flex;align-items:center;gap:.7rem;">
+          ${imgVal
+            ? `<span style="width:40px;height:26px;border-radius:2px;overflow:hidden;flex-shrink:0;"><img src="${imgVal}" style="width:100%;height:100%;object-fit:cover;"></span>`
+            : `<span style="font-size:1.3rem;">${it.emoji||'🖼️'}</span>`}
+          ${it.titulo} <span style="font-size:.6rem;color:#3A5C82;font-weight:400;">${sizeLabels[it.size]||'Normal'}</span>
+        </span>
+        <span style="color:#6B8FAE;font-size:.8rem;">▾</span>
+      </div>
+      <div class="adm-card-body">
+        <div class="adm-row">
+          <div>
+            <label class="adm-label">Emoji (sin imagen)</label>
+            <input class="adm-field" data-field="emoji" value="${it.emoji||''}">
+          </div>
+          <div>
+            <label class="adm-label">Título del overlay</label>
+            <input class="adm-field" data-field="titulo" value="${it.titulo}">
+          </div>
+        </div>
+
+        <!-- Image upload -->
+        <div>
+          <label class="adm-label">Imagen de la celda</label>
+          <div style="display:flex;flex-direction:column;gap:.6rem;">
+            <div class="img-preview-wrap" id="gipw_${it.id}" onclick="document.getElementById('gifile_${it.id}').click()">
+              <img id="gipreview_${it.id}" src="${imgVal}" alt="preview"
+                ${imgVal ? 'style="display:block;"' : ''}
+                onerror="this.style.display='none';document.getElementById('gihint_${it.id}').style.display='flex';">
+              <div class="upload-hint" id="gihint_${it.id}" ${imgVal ? 'style="display:none;"' : ''}>
+                <span>📷</span>Subir foto desde dispositivo
+              </div>
+              <div class="img-overlay-btn">🔄 Cambiar foto</div>
+            </div>
+            <input type="file" id="gifile_${it.id}" accept="image/*" style="display:none;" onchange="previewGalImg(this,'${it.id}')">
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <div style="flex:1;height:1px;background:rgba(91,155,213,.15);"></div>
+              <span style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.15em;color:#3A5C82;text-transform:uppercase;">O pegar URL</span>
+              <div style="flex:1;height:1px;background:rgba(91,155,213,.15);"></div>
+            </div>
+            <div style="display:flex;gap:.5rem;">
+              <input class="adm-field" id="giurl_${it.id}" placeholder="https://..." value="${imgVal && imgVal.startsWith('http') ? imgVal : ''}" style="flex:1;">
+              <button onclick="applyGalUrl('${it.id}')" style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:#0A47CC;color:#FAF3E0;border:none;padding:9px 14px;cursor:pointer;border-radius:2px;white-space:nowrap;">Aplicar</button>
+            </div>
+            <input type="hidden" id="gidata_${it.id}" data-field="imagen" value="${imgVal}">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:.4rem;">
+          <button class="save-btn" onclick="handleSave('galeria','${it.id}',this)">💾 Guardar</button>
+        </div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function loadVida(items) {
+  const list = document.getElementById('vida-list');
+  if (!list) return;
+  list.innerHTML = '';
+  items.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'adm-card';
+    card.innerHTML = `
+      <div class="adm-card-head" onclick="toggleCard(this)">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.92rem;text-transform:uppercase;color:#FAF3E0;display:flex;align-items:center;gap:.6rem;">
+          <span style="font-size:1.2rem;">${v.emoji}</span> ${v.titulo}
+        </span>
+        <span style="color:#6B8FAE;font-size:.8rem;">▾</span>
+      </div>
+      <div class="adm-card-body">
+        <div class="adm-row">
+          <div><label class="adm-label">Emoji</label><input class="adm-field" data-field="emoji" value="${v.emoji}"></div>
+          <div><label class="adm-label">Título</label><input class="adm-field" data-field="titulo" value="${v.titulo}"></div>
+        </div>
+        <div><label class="adm-label">Descripción</label><textarea class="adm-field" data-field="desc" rows="2">${v.desc}</textarea></div>
+        <div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:.4rem;">
+          <button class="save-btn" onclick="handleSave('vida','${v.id}',this)">💾 Guardar</button>
+        </div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ── Gallery image helpers ─────────────────────
+function previewGalImg(input, id) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const orig = new Image();
+    orig.onload = () => {
+      const W = 1200, H = 800;
+      const canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext('2d');
+      const srcA = orig.width / orig.height, dstA = W / H;
+      let sx, sy, sw, sh;
+      if (srcA > dstA) { sh=orig.height; sw=sh*dstA; sx=(orig.width-sw)/2; sy=0; }
+      else             { sw=orig.width;  sh=sw/dstA; sy=(orig.height-sh)/2; sx=0; }
+      ctx.drawImage(orig, sx, sy, sw, sh, 0, 0, W, H);
+      const data = canvas.toDataURL('image/jpeg', 0.82);
+      const img    = document.getElementById('gipreview_' + id);
+      const hint   = document.getElementById('gihint_'    + id);
+      const hidden = document.getElementById('gidata_'    + id);
+      img.src = data; img.style.display = 'block';
+      if (hint) hint.style.display = 'none';
+      hidden.value = data;
+      showToast(`✅ Foto lista — presiona Guardar`);
+    };
+    orig.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function applyGalUrl(id) {
+  const raw    = document.getElementById('giurl_'    + id).value.trim();
+  if (!raw) return;
+  const url    = normalizeImageUrl(raw);
+  const img    = document.getElementById('gipreview_' + id);
+  const hint   = document.getElementById('gihint_'    + id);
+  const hidden = document.getElementById('gidata_'    + id);
+  img.onerror = () => { img.style.display='none'; if(hint)hint.style.display='flex'; hidden.value=''; showToast('❌ No se pudo cargar. Verifica que sea pública.'); };
+  img.onload  = () => { img.style.display='block'; if(hint)hint.style.display='none'; hidden.value=url; document.getElementById('giurl_'+id).value=url; showToast('✅ Imagen cargada — presiona Guardar'); };
+  img.src = url;
+}
+
+// ── Render galeria + vida after save ──────────
+// (patch handleSave to handle galeria/vida)
 // ── Render tarjetas admin ─────────────────────
 function loadNoticias(items) {
   const list = document.getElementById('noticias-list');
@@ -505,6 +734,8 @@ async function handleSave(col, id, btn) {
   if (col === 'noticias')    renderNoticias(all2);
   if (col === 'ministerios') renderMinisterios(all2);
   if (col === 'avisos')      renderAvisos(all2);
+  if (col === 'galeria')     { _galCache = []; renderGaleria(all2); }
+  if (col === 'vida')        renderVida(all2);
 
   btn.textContent = ok ? '✓ Guardado' : '✓ Local';
   btn.style.background = '#1A7A3C';
