@@ -110,7 +110,7 @@ nav.scrolled {
 }
 .hero-bg {
   position:absolute; inset:0;
-  background:url('https://images.unsplash.com/photo-1470075801209-17f9ec0cada6?w=1800&q=85') center/cover no-repeat;
+  background:url('https://www.dropbox.com/scl/fi/ma4obl7gzl1znqzxzfl01/Captura-de-pantalla-2026-05-05-114946.png?rlkey=lnoe3oboy4knlx1rsauk7mroa&st=wffqzy0o&dl=0') center/cover no-repeat;
   transform:scale(1.04); transition:transform 10s ease;
 }
 .hero-bg::after {
